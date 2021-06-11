@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
-//use Validator;
+use Validator;
 
 class PostController extends Controller
 {
@@ -23,19 +22,49 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $request_data = $request->only(['title', 'content']);
+        $validator = Validator::make($request_data, [
+            "title" => ['required', 'string'],
+            "content" => ['required']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => false,
+                "errors" => $validator->messages()
+            ])->setStatusCode(422);
+        }
+
+        $post = Post::create([
+            "title" => $request->title,
+            "content" => $request->content
+        ]);
+
+        return response()->json([
+            "status" => true,
+            "post" => $post
+        ])->setStatusCode(201, "Post was stored");
     }
 
     public function show($id)
     {
         $post = Post::find($id);
-        if (!$post) {
+        /*if (!$post) {
             return response()->json([
                 "status" => false,
                 "message" => "Post not found"
             ])->setStatusCode(404, 'Post not found');
         }
-        return response()->json($post);
+        return response()->json($post);*/
+        if ($post) {
+            return response()->json($post);
+
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Post not found"
+            ])->setStatusCode(404, 'Post not found');
+        }
     }
 
     public function edit($id)
