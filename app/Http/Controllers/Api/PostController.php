@@ -15,11 +15,6 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         $request_data = $request->only(['title', 'content']);
@@ -58,11 +53,6 @@ class PostController extends Controller
                 "message" => "Post not found"
             ])->setStatusCode(404, 'Post not found');
         }
-    }
-
-    public function edit($id)
-    {
-        //
     }
 
     public function update(Request $request, $id)

@@ -175,7 +175,7 @@
                             <h5 class="card-title">${data.post.title}</h5>
                             <p class="card-text">${data.post.content.slice(0, 20)}...</p>
                             <button type="button" class="btn btn-primary" onclick="fullPost(${data.post.id})">Show</button>
-                            <button type="button" onclick="setFieldsForModalUpdate('${data.post.title}', '${data.post.content}', ${data.post.id})" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#update">
+                            <button type="button" onclick="setFieldsForModalUpdate('${data.post.title}', '${data.post.content}', ${data.post.id})" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update">
                                 Update
                             </button>
                             <button type="button" onclick="setFieldsForModalDelete('${data.post.title}', ${data.post.id})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete">
