@@ -101,6 +101,18 @@ class PostController extends Controller
 
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        if ($post) {
+            $post->delete();
+            return response()->json([
+                "status" => true,
+                "message" => "Post was deleted"
+            ])->setStatusCode(200, "Post was deleted");
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Post not found"
+            ])->setStatusCode(404, "Post not found");
+        }
     }
 }

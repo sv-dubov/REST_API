@@ -77,6 +77,25 @@
         </div>
     </div>
 </div>
+<!-- Modal delete post -->
+<div class="modal" id="delete" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="hidden" id="delete-id">
+            <div class="modal-body">
+                <p>Do you really want to delete: <span id="delete-title"></span>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="destroy()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
         integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
@@ -98,6 +117,9 @@
                             <button type="button" class="btn btn-primary" onclick="fullPost(${data[index].id})">Show</button>
                             <button type="button" onclick="setFieldsForModalUpdate('${data[index].title}', '${data[index].content}', ${data[index].id})" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update">
                                 Update
+                            </button>
+                            <button type="button" onclick="setFieldsForModalDelete('${data[index].title}', ${data[index].id})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete">
+                                Delete
                             </button>
                         </div>
                     </div>
@@ -153,8 +175,11 @@
                             <h5 class="card-title">${data.post.title}</h5>
                             <p class="card-text">${data.post.content.slice(0, 20)}...</p>
                             <button type="button" class="btn btn-primary" onclick="fullPost(${data.post.id})">Show</button>
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#update">
+                            <button type="button" onclick="setFieldsForModalUpdate('${data.post.title}', '${data.post.content}', ${data.post.id})" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#update">
                                 Update
+                            </button>
+                            <button type="button" onclick="setFieldsForModalDelete('${data.post.title}', ${data.post.id})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete">
+                                Delete
                             </button>
                         </div>
                     </div>
@@ -184,6 +209,24 @@
             },
             success(data) {
                 $('#update').modal('hide');
+                loadPosts();
+            }
+        })
+    }
+
+    function setFieldsForModalDelete(title, id) {
+        $('#delete-id').val(id);
+        $('#delete-title').text(title);
+    }
+
+    function destroy() {
+        const id = $('#delete-id').val();
+        $.ajax({
+            url: "/api/posts/" + id,
+            type: "DELETE",
+            dataType: "json",
+            success(data) {
+                $('#delete').modal('hide');
                 loadPosts();
             }
         })
